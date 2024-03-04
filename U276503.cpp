@@ -1,55 +1,34 @@
-// https://luogu.com.cn/problem/U276503
-// 不知为啥 第一二个都只有96分，第二个是满分
-// #include<bits/stdc++.h>
-// using namespace std;
-// bool isPrime(int x) {
-//     for (int i = 2; i * i < x; i++) {
-//         if (x % i == 0) return false;
-//     }
-//     return true;
-// }
-// int main() {
-//     int x;
-//     scanf("%d", &x);
-//     int add = 0;
-//     while (true) {
-//         if (isPrime(stoi(to_string(x) + to_string(++add)))) {
-//             printf("%s\n", (to_string(x) + to_string(add)).c_str());
-//             // 必须要有.c_str()这个函数的转换
-//             // 因为to_string默认是C++风格的字符串，但printf需要C风格的字符串
-//             // cout << to_string(x) << to_string(add);
-//             break;
-//         }
-//     }
-//     return 0;
-// }
+// https://www.luogu.com.cn/problem/U276503
 
-//正常解法
-#include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
-bool is_prime(int x) {
-    for (int i = 2;i * i <= x;i++)
-        if (x % i == 0)
-            return false;
+bool isPrime(int x) {
+    for (int i = 2; i * i <= x; i++) {
+        if (x % i == 0) return false;
+    }
     return true;
 }
 int main() {
     int x;
     scanf("%d", &x);
-    int i = 0;
+    int add = 0;
     while (true) {
-        if (is_prime(stoi(to_string(x) + to_string(++i))))
+        if (isPrime(stoi(to_string(x) + to_string(++add)))) {
+            printf("%s\n", (to_string(x) + to_string(add)).c_str());
+            // 必须要有.c_str()这个函数的转换
+            // 因为to_string默认是C++风格的字符串，但printf需要C风格的字符串
+            // cout << to_string(x) << to_string(add);
             break;
+        }
     }
-    printf("%s%s\n", to_string(x).c_str(), to_string(i).c_str());
+    return 0;
 }
-
 
 // #include <bits/stdc++.h>
 // using namespace std;
 // bool isPrime(int x) {
 //     if (x < 2) return false;
-//     for (int i = 2; i * i < x; i++) {
+//     for (int i = 2; i * i <= x; i++) {
 //         if (x % i == 0) return false;
 //     }
 //     return true;

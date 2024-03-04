@@ -4,6 +4,7 @@ using namespace std;
 int main() {
     string n; int k;
     cin >> n >> k;// C++中不要用scanf读字符串&s,因为C++和C风格的字符串不一样
+    //一定要的话可以用 char str[100]; scanf("%s", str);
     int num = 0, res = 0;// num记录前缀
     //将输入从字符串转化为数组
     vector<int> array;

@@ -1,42 +1,42 @@
 // https://www.luogu.com.cn/problem/U281314
+// 改变矩阵访问方式才是王道，改变矩阵显得很蠢
 #include <bits/stdc++.h>
 using namespace std;
-const int N = 110;
-int matrix[N][N];
-int[][] fun1(int[][] matrix) {
-    for (int i = 1; i < n; i++) {
-        for (int j = i + 1; j <= n; j++) {
-            int s = matrix[i][j];
-            matrix[i][j] = matrix[j][i];
-            matrix[j][i] = s;
-        }
-    }
-    return matrix;
-}
-int[][] fun2(int[][] matrix, int k) {
-
-}
-int[][] fun3(int[][] matrix, int k) {
-
-}
 int main() {
-    int n;
+    int n, q;    //n 表示矩阵大小; q 表示操作次数
     scanf("%d", &n);
-    for (int i = 1; i <= n;i++) {
-        for (int j = 1; j <= n; j++) {
+    int m[n][n];
+    for (int i = 0;i < n;i++) {
+        for (int j = 0;j < n;j++) {
             int t;
             scanf("%d", &t);
-            matrix[i][j] = t;
+            m[i][j] = t;
         }
     }
-    int q;
     scanf("%d", &q);
+    bool flag = false;      //是否翻转的标志
+    int row = 0, col = 0;   //row:移动几行；col:移动几列
     while (q--) {
-        int q1;
+        int q1, q2;
         scanf("%d", &q1);
-        if (q1 == 1) matrix = fun1(matrix);
+        if (q1 == 1) flag = !flag;
+        else if (q1 == 2) {
+            scanf("%d", &q2);
+            flag ? col -= q2 : row -= q2;   //跟顺序有关系，flag不能抵消
+        } else {
+            scanf("%d", &q2);
+            flag ? row -= q2 : col -= q2;
+        }
     }
-
-
+    row = row % n + n;  //（-11）% 10 == (-1)
+    col = col % n + n;  //保证两个在[0，n)
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            //以（row,col）为基准，出发去遍历
+            int ret = flag ? m[(row + j) % n][(col + i) % n] : m[(row + 1) % n][(col + j) % n];
+            printf("%d ", ret);
+        }
+        printf("\n");
+    }
     return 0;
 }
