@@ -1,65 +1,64 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string.h>
 using namespace std;
-const int N = 26 + 1;
-struct com {
-    bool oc1;   //记录是否在第一行出现，初始化都是false
-    bool oc2;   //记录是否在其他地方出现
-    bool hs;    //记录是否含参
-    string s;   //记录参数
-}C[N];
-void Print() {
-    for (int i = 0; i < N; i++) {
-        if (C[i].oc2) {
-            C[i].oc2 = false;
-            printf("-%c ", i + 'a');
-            if (C[i].hs) printf("%s ", C[i].s);
+const int N = 'z' + 1, M = 260;
+
+char s[M], ans[N][M];
+bool op1[N], op2[N], vis1[N], vis2[N];
+void process() {
+    memset(ans, 0, sizeof ans), memset(vis1, 0, sizeof vis1), memset(vis2, 0, sizeof vis2);
+    for (int i = 0, op = 0, idx = 0, valid = false; s[i]; valid = valid || s[i] == ' ', i++)
+        // 跳过开头的命令
+        if (!valid)
+            continue;
+    // 遇到空格必是参数读完了
+        else if (s[i] == ' ')
+            ans[op][idx] = 0,//char赋值为0就是断了，后面判断也就知道后面没有了
+            vis2[op] = true, op = idx = 0;
+    // 读入参数过程
+        else if (op)
+            ans[op][idx++] = s[i];
+    // 读入合法的命令行选项
+    // islower(s[i + 1])判断是否是小写字母
+        else if (s[i] == '-' && islower(s[i + 1]) && s[i + 2] == ' ' && (op1[s[i + 1]] || op2[s[i + 1]])) {
+            // 不带参数
+            if (op1[s[i + 1]])
+                vis1[s[i + 1]] = true;
+            // 带参数
+            else
+                op = s[i + 1];
+            // 跳过这个参数
+            i += 2;
         }
-    }
+    // 非法字符
+        else
+            break;
+
+    for (char c = 'a'; c <= 'z'; c++)
+        if (vis1[c])
+            printf(" -%c", c);
+        else if (vis2[c])
+            printf(" -%c %s", c, ans[c]);
     printf("\n");
 }
+
 int main() {
-    int pre;
-    string s1;
-    cin >> s1;
-    for (auto c : s1) {
-        if (c == ':') {
-            C[pre].hs = true;
-        } else {
-            pre = c - 'a';
-            C[pre].oc1 = true;
-        }
-    }
-    int N;
-    scanf("%d", &N);
-    string s, name;
-    cin >> name;    //知晓name
-    for (int i = 1; i <= N; i++) {
-        s.clear();
-        printf("Case %d: ", i);
-        while (i > 1 && s != name) {
-            cin >> s;   //洗掉后面无关的
-        }
-        pre = 26;    //确保C[pre].hs为false
-        while (1) {
-            cin >> s;
-            if (s == name) {
-                printf("\n");
-                break;
-            }
-            if (s[0] == '-' && !C[pre].hs) {
-                pre = s[1] - 'a';
-                if (!C[pre].oc1) {
-                    Print();
-                    break;
-                }
-                if (!C[pre].hs) C[pre].oc2 = true;
-            } else if (s[0] != '-' && C[pre].hs) {
-                C[pre].s = s;
-                C[pre].oc2 = true;
-            } else {
-                Print();
-                break;
-            }
-        }
+    scanf("%s", s);
+    for (int i = 0; s[i]; i++)
+        if (s[i + 1] == ':')
+            op2[s[i++]] = true;
+        else
+            op1[s[i]] = true;
+
+    int n;
+    // 记得跳过换行符
+    scanf("%d\n", &n);
+    for (int i = 1; i <= n; i++) {
+        int idx = 0;
+        for (char c; c = getchar(), c && c != '\n';)
+            s[idx++] = c;
+        // 结尾处插入一个空格，便于后续处理
+        s[idx++] = ' ', s[idx] = 0;
+        printf("Case %d:", i), process();
     }
 }
