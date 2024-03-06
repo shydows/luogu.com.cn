@@ -7,21 +7,23 @@ const int N = 1e5 + 5, M = 5e5 + 5, mod = 1e9 + 7;
 
 struct Edge {
     int t, ne;  //从t到ne的边
-} e[M << 1];    //为什么要乘2？
-int h[2][N], idx;   //h:? idx:?
-void add(int u, int v, int op) { e[++idx] = { v, h[op][u] }, h[op][u] = idx; }
-
+} e[M << 1];    //因为add(u, v, 0)和add(v, u, 1)共两遍，故乘2
+int h[2][N], idx; //idx就是第几条边
+void add(int u, int v, int op) {
+    e[++idx] = { v, h[op][u] };//h[0][u]从u到v的边；h[1][u]从v到u的边
+    h[op][u] = idx;
+}
 ll min_[N], max_[N];
 ll ans1, ans2;
-int a[N], n, m;
+int a[N], n, m;//ai记录第i个实验需要的时间
 int q[N];
-void toposort(ll d[N], int deg[N], bool op) {
+void toposort(ll d[N], int deg[N], bool op) {//(min_/max_, in/out, 0/1)
     if (op)
         memset(d, 0x3f, sizeof min_);
     int l = 0, r = 0;
     for (int i = 1; i <= n; i++)
-        if (!deg[i])
-            q[r++] = i, d[i] = op ? ans1 - a[i] : 0;
+        if (!deg[i])//如果i点没有入度或者没有出度
+            q[r++] = i, d[i] = op ? ans1 - a[i] : 0;//q记录的点的拓扑顺序
     while (l < r) {
         int x = q[l++];
         for (int i = h[op][x]; i; i = e[i].ne) {
@@ -33,14 +35,17 @@ void toposort(ll d[N], int deg[N], bool op) {
     }
 }
 
-int in[N], out[N];
+int in[N], out[N];//记录该点的出度和入度
 int main() {
     scanf("%d%d", &n, &m);
     for (int i = 1; i <= n; i++)
         scanf("%d", &a[i]);
-    for (int u, v; m--;)
-        scanf("%d%d", &u, &v), add(u, v, 0), add(v, u, 1), in[v]++, out[u]++;
-
+    for (int u, v; m--;) {
+        scanf("%d%d", &u, &v);
+        add(u, v, 0);//u是v的前置函数
+        add(v, u, 1);//v是u的后置函数
+        in[v]++, out[u]++;
+    }
     toposort(min_, in, 0);
     for (int i = 1; i <= n; i++)
         ans1 = max(ans1, min_[i] + a[i]);
