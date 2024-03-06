@@ -1,33 +1,60 @@
 //https://www.luogu.com.cn/problem/U276602
+// 70分，会TLE
+#include <bits/stdc++.h>
+using namespace std;
+const int M = 1e9 + 7, N = 1e5 + 5;
+int main() {
+    int n, m;
+    long long ret = 0;
+    cin >> n >> m;
+    multiset<int> set;
+    for (int i = 0; i < n; i++) {
+        int num;
+        cin >> num;
+        set.insert(num);
+    }
+    vector<int> Num;
+    Num.push_back(0);
+    for (int c : set) {
+        Num.push_back(c);
+    }
+    for (int i = n; i > 1; i--) {
+        if (Num[i] > m) continue;
+        for (int j = 1; j < i;j++) {
+            if (Num[i] + Num[j] > m) continue;
+            ret++;
+        }
+    }
+    ret %= M;
+    cout << ret << endl;
+}
+
 //错误思路：构建一个数组，sum[i]表示数组中比i小的数字的个数和
 //原因：空间会超：sum[maxM] = { 0 }, num[maxM] = { 0 };
 // #include<bits/stdc++.h>
 // using namespace std;
-// typedef long long LL;
-// const LL maxM = 1e9, MOD = 1e9 + 7;
-// LL sum[maxM] = { 0 }, num[maxM] = { 0 };
+// const int maxM = 1e9, MOD = 1e9 + 7;
+// int sum[maxM] = { 0 }, num[maxM] = { 0 };
 // int main() {
-//     LL n, M, ret = 0;
+//     int n, M, ret = 0;
 //     scanf("%d%d", &n, &M);
 //     while (n--) {
-//         LL i;
+//         int i;
 //         scanf("%d", &i);
 //         num[i]++;
 //     }
-//     for (LL i = 0; i < maxM; i++) {
+//     for (int i = 0; i < maxM; i++) {
 //         sum[i] += num[i];
 //     }
-//     for (LL i = 1;i * 2 < M;i++) {
-//         LL j = M - i;//j一定大于i
+//     for (int i = 1;i * 2 < M;i++) {
+//         int j = M - i;//j一定大于i
 //         if (num[i]) { //确保i存在
 //             ret += sum[j] - sum[i];
 //             ret %= MOD;
 //         }
 //     }
-//     printf("%lld", ret);
+//     printf("%intd", ret);
 // }
-
-//想到set自带排序
 
 // 归并排序
 // #include <iostream>
