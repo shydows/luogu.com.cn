@@ -1,38 +1,50 @@
-// https://www.luogu.com.cn/problem/U281296
-// 五子棋
-#include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
 
-int g[20][20];
-bool judge(int x, int y, int dx, int dy) {
-    int cnts = 1;
-    for (int xx = x - dx, yy = y - dy; g[xx][yy] == g[x][y];
-        xx -= dx, yy -= dy)
-        cnts++;
-    for (int xx = x + dx, yy = y + dy; g[xx][yy] == g[x][y];
-        xx += dx, yy += dy)
-        cnts++;
-    return cnts >= 5;
+const int N = 17;
+const int dx[] = { 1,0,1,1 }, dy[] = { 0,1,1,-1 };
+int G[N][N];//棋盘，初始化为-1，1表示黑棋A，0表示白起B
+
+bool isIn(int x, int y) {
+    return(x >= 1 && x <= 15 && y >= 1 && y <= 15);
 }
 
-int n, winner, ans;
+bool add(int x1, int y1, int i) {
+    G[x1][y1] = i % 2;
+    int flag = G[x1][y1];
+    for (int i = 0;i < 4;i++) {
+        int cnt = 1;
+        int x2 = x1 + dx[i], y2 = y1 + dy[i];
+        while (isIn(x2, y2) && (G[x2][y2] == flag) && cnt < 5) {
+            cnt++; x2 += dx[i]; y2 += dy[i];
+        }
+        //千万别忘了两个方向
+        x2 = x1 - dx[i], y2 = y1 - dy[i];
+        while (isIn(x2, y2) && (G[x2][y2] == flag) && cnt < 5) {
+            cnt++; x2 -= dx[i]; y2 -= dy[i];
+        }
+        if (cnt == 5) return true;
+    }
+    return false;
+}
+
 int main() {
+    int n;
     scanf("%d", &n);
-    for (int i = 1, x, y; i <= n; i++) {
-        scanf("%d%d", &x, &y);
-        int op = i & 1 ? 1 : 2;
-        if (!winner) {
-            g[x][y] = op;
-            // 分别判断两个斜方向、竖直方向、水平方向有无五个连子
-            if (judge(x, y, 1, 1) || judge(x, y, 1, 0) || judge(x, y, 1, -1) ||
-                judge(x, y, 0, 1))
-                winner = op, ans = i;
+
+    memset(G, -1, sizeof G);
+
+    for (int i = 1;i <= n;i++) {
+        int x1, y1;
+        scanf("%d%d", &x1, &y1);
+        if (add(x1, y1, i)) {
+            if (i % 2) {
+                printf("A %d\n", i);return 0;
+            } else {
+                printf("B %d\n", i);return 0;
+            }
         }
     }
-    if (winner == 0)
-        printf("Tie");
-    else if (winner == 1)
-        printf("A %d", ans);
-    else
-        printf("B %d", ans);
+    printf("Tie\n");
+    return 0;
 }

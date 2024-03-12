@@ -1,33 +1,79 @@
 //https://www.luogu.com.cn/problem/U276602
-// 70分，会TLE
 #include <bits/stdc++.h>
 using namespace std;
-const int M = 1e9 + 7, N = 1e5 + 5;
-int main() {
-    int n, m;
-    long long ret = 0;
-    cin >> n >> m;
-    multiset<int> set;
-    for (int i = 0; i < n; i++) {
-        int num;
-        cin >> num;
-        set.insert(num);
-    }
-    vector<int> Num;
-    Num.push_back(0);
-    for (int c : set) {
-        Num.push_back(c);
-    }
-    for (int i = n; i > 1; i--) {
-        if (Num[i] > m) continue;
-        for (int j = 1; j < i;j++) {
-            if (Num[i] + Num[j] > m) continue;
-            ret++;
-        }
-    }
-    ret %= M;
-    cout << ret << endl;
-}
+// const int N = 1e5 + 2, M = 1e9 + 7;
+// int  sum[M];//sum[i]记录数组A中小于等于i的数据个数总和
+// // 思路：先快速或者归并排序，构建sum数组，遍历A数组，累加sum[M-A[i]]
+// // 注意如果A[i]<=(M-A[i]),要减去1，去除自身；注意模M
+
+// int main() {
+//     int n, m;
+//     scanf("%d%d", &n, &m);
+
+//     vector<int> A;
+//     A.push_back(-1);
+//     for (int i = 1; i <= n; i++) {
+//         int a;
+//         scanf("%d", &a);
+//         A.push_back(a);
+//     }
+
+//     sort(A.begin(), A.end());
+
+//     //build sum[]
+//     for (int i = 1, j = 0, cnt = 0; i <= n && j <= m; ) {
+//         while (A[i] > j && j <= m) {
+//             sum[j] = cnt;
+//             j++;
+//         }
+//         while (A[i] <= j && i <= n) {
+//             cnt++;
+//             i++;
+//         }
+//         sum[j] = cnt;
+//         j++;
+//     }
+
+//     //
+//     int ret = 0;
+//     for (int i = 1; i <= n && A[i] * 2 <= m; i++) {
+//         ret += sum[m - A[i]] - 1;
+//         if (A[i]) ret -= sum[A[i] - 1];
+//         ret %= M;
+//         while (ret < 0) ret += M;
+//     }
+//     cout << ret << endl;
+// }
+
+// 70分，会TLE
+// #include <bits/stdc++.h>
+// using namespace std;
+// const int M = 1e9 + 7, N = 1e5 + 5;
+// int main() {
+//     int n, m;
+//     long long ret = 0;
+//     cin >> n >> m;
+//     multiset<int> set;
+//     for (int i = 0; i < n; i++) {
+//         int num;
+//         cin >> num;
+//         set.insert(num);
+//     }
+//     vector<int> Num;
+//     Num.push_back(0);
+//     for (int c : set) {
+//         Num.push_back(c);
+//     }
+//     for (int i = n; i > 1; i--) {
+//         if (Num[i] > m) continue;
+//         for (int j = 1; j < i;j++) {
+//             if (Num[i] + Num[j] > m) continue;
+//             ret++;
+//         }
+//     }
+//     ret %= M;
+//     cout << ret << endl;
+// }
 
 //错误思路：构建一个数组，sum[i]表示数组中比i小的数字的个数和
 //原因：空间会超：sum[maxM] = { 0 }, num[maxM] = { 0 };
@@ -56,7 +102,7 @@ int main() {
 //     printf("%intd", ret);
 // }
 
-// 归并排序
+// Answer1 归并排序
 // #include <iostream>
 // using namespace std;
 // typedef long long ll;
@@ -93,7 +139,7 @@ int main() {
 //   printf("%lld\n", ans % mod);
 // }
 
-// 离散化 + 树状数组
+// Answer2 离散化 + 树状数组
 // #include <iostream>
 // #include <algorithm>
 // using namespace std;
